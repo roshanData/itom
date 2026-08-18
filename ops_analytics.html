@@ -12,7 +12,7 @@
   <!-- Chart.js for enterprise visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Vanilla CSS Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=6.0">
+  <link rel="stylesheet" href="style.css?v=7.0">
 </head>
 <body class="dashboard-body">
 
@@ -138,7 +138,7 @@
         <div class="chart-card">
           <div class="card-header">
             <h3 class="card-title">Device Compliance Status</h3>
-            <span class="badge">Intune Policy</span>
+            <span class="badge">Click slice to filter table</span>
           </div>
           <div class="chart-wrapper">
             <canvas id="complianceChart"></canvas>
@@ -153,6 +153,83 @@
           </div>
           <div class="chart-wrapper">
             <canvas id="mfgChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Stale Asset & Inactivity Aging -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">Endpoint Sync Freshness & Aging</h3>
+            <span class="badge">Asset Hygiene</span>
+          </div>
+          <div class="aging-widget">
+            <div class="aging-bar-group">
+              <div class="aging-item">
+                <div class="aging-header">
+                  <span class="text-success font-semibold">&bull; Active (&le; 7 Days)</span>
+                  <span class="font-mono" id="agingActiveText">20,412 (78.5%)</span>
+                </div>
+                <div class="aging-progress-bg">
+                  <div class="aging-progress-fill" id="agingActiveBar" style="width: 78.5%; background-color: #10B981;"></div>
+                </div>
+              </div>
+
+              <div class="aging-item">
+                <div class="aging-header">
+                  <span class="text-warning font-semibold">&bull; Idle (7–30 Days)</span>
+                  <span class="font-mono" id="agingIdleText">2,378 (9.2%)</span>
+                </div>
+                <div class="aging-progress-bg">
+                  <div class="aging-progress-fill" id="agingIdleBar" style="width: 9.2%; background-color: #F59E0B;"></div>
+                </div>
+              </div>
+
+              <div class="aging-item">
+                <div class="aging-header">
+                  <span class="text-danger font-semibold">&bull; Stale / Orphaned (&gt; 30 Days)</span>
+                  <span class="font-mono" id="agingStaleText">3,197 (12.3%)</span>
+                </div>
+                <div class="aging-progress-bg">
+                  <div class="aging-progress-fill" id="agingStaleBar" style="width: 12.3%; background-color: #EF4444;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="aging-footer-card">
+              <span class="text-muted text-xs">Security & Lifecycle Risk:</span>
+              <span class="text-white text-xs font-semibold">3,197 non-syncing endpoints flagged for license reclamation & patch triage.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart 5: Security & OS Build Lifecycle -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">Windows 11 Transition & Lifecycle</h3>
+            <span class="badge">OS Modernization</span>
+          </div>
+          <div class="lifecycle-widget">
+            <div class="lifecycle-stat-row">
+              <div class="lifecycle-stat-box">
+                <div class="stat-number text-success font-semibold">25,314</div>
+                <div class="stat-title text-muted text-xs">Windows 11 (Modern)</div>
+                <div class="stat-badge text-success">99.9% Fleet Migrated</div>
+              </div>
+              <div class="lifecycle-stat-box">
+                <div class="stat-number text-warning font-semibold">20</div>
+                <div class="stat-title text-muted text-xs">Windows 10 (Legacy/EOL)</div>
+                <div class="stat-badge text-warning">Urgent Upgrade Target</div>
+              </div>
+            </div>
+            <div class="encryption-row">
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-muted">BitLocker / FileVault Disk Encryption:</span>
+                <span class="text-success font-semibold">95.8% (24,892 Protected)</span>
+              </div>
+              <div class="aging-progress-bg">
+                <div class="aging-progress-fill" style="width: 95.8%; background-color: #10B981;"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -287,6 +364,17 @@
           </div>
         </div>
 
+        <!-- Chart 4: Top Saturated Infrastructure Servers -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">Top 10 Saturated Server Triage</h3>
+            <span class="badge badge-danger">41 Critical Nodes</span>
+          </div>
+          <div class="saturated-list" id="swSaturatedList">
+            <!-- Dynamically Populated by ops_analytics.js -->
+          </div>
+        </div>
+
       </div>
 
       <!-- Live Server Node Inventory Section -->
@@ -337,7 +425,7 @@
   </main>
 
   <!-- Script Inclusions -->
-  <script src="ops_analytics.js?v=11.0"></script>
+  <script src="ops_analytics.js?v=12.0"></script>
 </body>
 </html>
 

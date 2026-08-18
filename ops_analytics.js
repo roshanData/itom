@@ -342,7 +342,7 @@
       'Android': 1
     });
 
-    // 2. Compliance Bar Chart
+    // 2. Compliance Bar Chart (Interactive Click-to-Filter)
     renderComplianceChart(data.compliance_breakdown || {
       'compliant': 21589,
       'noncompliant': 3422,
@@ -359,6 +359,20 @@
       'Apple': 604,
       'Other': 98
     });
+
+    // 4. Update Stale Asset Aging values if present
+    const aging = data.aging_breakdown;
+    if (aging) {
+      setElemText('agingActiveText', `${Number(aging.active_7d || 20412).toLocaleString()} (${aging.active_pct || 78.5}%)`);
+      setElemText('agingIdleText', `${Number(aging.idle_30d || 2378).toLocaleString()} (${aging.idle_pct || 9.2}%)`);
+      setElemText('agingStaleText', `${Number(aging.stale_30d_plus || 3197).toLocaleString()} (${aging.stale_pct || 12.3}%)`);
+      const barActive = document.getElementById('agingActiveBar');
+      const barIdle = document.getElementById('agingIdleBar');
+      const barStale = document.getElementById('agingStaleBar');
+      if (barActive) barActive.style.width = `${aging.active_pct || 78.5}%`;
+      if (barIdle) barIdle.style.width = `${aging.idle_pct || 9.2}%`;
+      if (barStale) barStale.style.width = `${aging.stale_pct || 12.3}%`;
+    }
 
     renderIntuneTable();
   }
@@ -442,7 +456,30 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedStatus = orderedKeys[index];
+            const searchInput = document.getElementById('deviceSearchInput');
+            if (searchInput && selectedStatus) {
+              searchInput.value = selectedStatus;
+              intuneCurrentPage = 1;
+              intuneFilteredDevices = allIntuneDevices.filter(d => 
+                (d.complianceState || '').toLowerCase() === selectedStatus.toLowerCase()
+              );
+              renderIntuneTable();
+              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click bar to filter table'
+            }
+          }
+        },
         scales: {
           x: { ticks: { color: '#A3A3A3', font: { family: 'Inter' } }, grid: { color: '#222222' } },
           y: { ticks: { color: '#A3A3A3', font: { family: 'Inter' } }, grid: { color: '#222222' } }
@@ -610,8 +647,41 @@
     // 3. Vendor Pie Chart (Zero counts automatically filtered)
     renderSwVendorChart(data.vendor_breakdown || { 'Cisco': 492, 'Windows': 261, 'Linux': 4, 'Other': 791 });
 
-    // 4. Server Nodes Table
+    // 4. Top Saturated Server Triage List
+    renderSwSaturatedList(data.top_saturated_servers || data.top_degraded_servers || []);
+
+    // 5. Server Nodes Table
     renderSolarWindsTable();
+  }
+
+  function renderSwSaturatedList(servers) {
+    const container = document.getElementById('swSaturatedList');
+    if (!container) return;
+
+    if (!servers || servers.length === 0) {
+      container.innerHTML = `<div class="text-xs text-muted py-2 text-center">No degraded servers currently reporting.</div>`;
+      return;
+    }
+
+    container.innerHTML = servers.slice(0, 10).map(s => {
+      const cpu = Number(s.CPULoad || 0);
+      const ram = Number(s.PercentMemoryUsed || 0);
+      const isCpuCrit = cpu > 90;
+      const isRamCrit = ram > 90;
+
+      return `
+        <div class="saturated-item">
+          <div class="saturated-info">
+            <span class="saturated-name">${escapeHtml(s.Caption || 'Server')}</span>
+            <span class="saturated-ip">${escapeHtml(s.IPAddress || 'N/A')} &bull; ${escapeHtml(s.Vendor || 'Hardware')}</span>
+          </div>
+          <div class="saturated-metrics">
+            <span class="saturated-pill ${isCpuCrit ? 'crit' : 'warn'}">CPU ${cpu}%</span>
+            <span class="saturated-pill ${isRamCrit ? 'crit' : 'warn'}">RAM ${ram}%</span>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   function renderSwHealthChart(healthData) {
@@ -619,6 +689,8 @@
     if (!canvas || typeof Chart === 'undefined') return;
 
     destroyChartSafe(swHealthChartInstance, canvas);
+
+    const tiers = ['High', 'Medium', 'Low'];
 
     swHealthChartInstance = new Chart(canvas.getContext('2d'), {
       type: 'doughnut',
@@ -634,8 +706,29 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedTier = tiers[index];
+            const swSearch = document.getElementById('swSearchInput');
+            if (swSearch && selectedTier) {
+              swSearch.value = selectedTier;
+              swCurrentPage = 1;
+              swFilteredNodes = allSwNodes.filter(n => 
+                (n.HealthClassification || n.HealthTier || '').toLowerCase() === selectedTier.toLowerCase()
+              );
+              renderSolarWindsTable();
+              swSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
         plugins: {
-          legend: { position: 'right', labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } } }
+          legend: { position: 'right', labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } } },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click tier to filter table'
+            }
+          }
         }
       }
     });

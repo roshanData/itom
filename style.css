@@ -1419,6 +1419,170 @@ body {
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
+/* Aging & Inactivity Widget */
+.aging-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 0;
+}
+
+.aging-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aging-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aging-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.aging-progress-bg {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.aging-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.aging-footer-card {
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--border-radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Lifecycle & Security Widget */
+.lifecycle-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lifecycle-stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.lifecycle-stat-box {
+  background-color: #1A1A1A;
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lifecycle-stat-box .stat-number {
+  font-size: 20px;
+  font-family: var(--font-mono);
+}
+
+.lifecycle-stat-box .stat-badge {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.encryption-row {
+  background-color: #1A1A1A;
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Saturated Servers Triage List */
+.saturated-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.saturated-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: #1A1A1A;
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-sm);
+  transition: border-color 0.15s ease;
+}
+
+.saturated-item:hover {
+  border-color: #EF4444;
+}
+
+.saturated-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.saturated-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.saturated-ip {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.saturated-metrics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.saturated-pill {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.saturated-pill.crit {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.saturated-pill.warn {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .kpi-grid {
