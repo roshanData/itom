@@ -257,7 +257,7 @@
         if (res.ok) {
           solarwindsData = await res.json();
           if (!allSwNodes || allSwNodes.length === 0) {
-            allSwNodes = solarwindsData.top_degraded_servers || [];
+            allSwNodes = solarwindsData.sample_nodes || solarwindsData.top_degraded_servers || [];
             swFilteredNodes = [...allSwNodes];
           }
           renderSolarWindsDashboard(solarwindsData);
@@ -853,17 +853,8 @@
   // =========================================================================
 
   function initSearchFilters() {
-    // Intune Live Search & Page Size
+    // Intune Live Search
     const intuneSearch = document.getElementById('deviceSearchInput');
-    const intunePageSelect = document.getElementById('intunePageSize');
-
-    if (intunePageSelect) {
-      intunePageSelect.addEventListener('change', (e) => {
-        intunePageSize = Number(e.target.value) || 25;
-        intuneCurrentPage = 1;
-        renderIntuneTable();
-      });
-    }
 
     if (intuneSearch) {
       intuneSearch.addEventListener('input', (e) => {
@@ -886,17 +877,8 @@
       });
     }
 
-    // SolarWinds Live Search & Page Size
+    // SolarWinds Live Search
     const swSearch = document.getElementById('swSearchInput');
-    const swPageSelect = document.getElementById('swPageSize');
-
-    if (swPageSelect) {
-      swPageSelect.addEventListener('change', (e) => {
-        swPageSize = Number(e.target.value) || 25;
-        swCurrentPage = 1;
-        renderSolarWindsTable();
-      });
-    }
 
     if (swSearch) {
       swSearch.addEventListener('input', (e) => {

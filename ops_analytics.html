@@ -12,7 +12,7 @@
   <!-- Chart.js for enterprise visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Vanilla CSS Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=4.0">
+  <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body class="dashboard-body">
 
@@ -195,16 +195,9 @@
           </div>
 
           <div class="table-footer">
-            <div class="flex items-center gap-3">
-              <span id="tableRecordCount">Showing 1–25 of 25,987 devices</span>
-              <select id="intunePageSize" class="page-size-select" title="Rows per page">
-                <option value="25" selected>25 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
-              </select>
-            </div>
+            <span id="tableRecordCount">Showing 1–25 of 25,987 devices</span>
             <div class="pagination-controls" id="intunePagination">
-              <!-- Dynamically Populated by JS -->
+              <!-- Dynamically Populated with clean Prev, 1, 2, 3, Next buttons -->
             </div>
             <button class="btn btn-secondary btn-sm" id="loadMoreBtn">Export Complete Dataset (CSV)</button>
           </div>
@@ -336,16 +329,9 @@
           </div>
 
           <div class="table-footer">
-            <div class="flex items-center gap-3">
-              <span id="swTableRecordCount">Showing 1–25 of 1,548 nodes</span>
-              <select id="swPageSize" class="page-size-select" title="Rows per page">
-                <option value="25" selected>25 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
-              </select>
-            </div>
+            <span id="swTableRecordCount">Showing 1–25 of 1,548 nodes</span>
             <div class="pagination-controls" id="swPagination">
-              <!-- Dynamically Populated by JS -->
+              <!-- Dynamically Populated with clean Prev, 1, 2, 3, Next buttons -->
             </div>
             <button class="btn btn-secondary btn-sm" id="exportSwCsvBtn">Export Complete SolarWinds Dataset (CSV)</button>
           </div>
@@ -357,7 +343,7 @@
   </main>
 
   <!-- Script Inclusions -->
-  <script src="ops_analytics.js?v=9.0"></script>
+  <script src="ops_analytics.js?v=10.0"></script>
 </body>
 </html>
 
