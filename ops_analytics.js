@@ -740,10 +740,13 @@
 
     destroyChartSafe(swStatusChartInstance, canvas);
 
+    const statusKeys = ['up', 'warning', 'critical', 'down', 'unmanaged_unknown'];
+    const statusLabels = ['Up (Active)', 'Warning', 'Critical', 'Down', 'Unmanaged'];
+
     swStatusChartInstance = new Chart(canvas.getContext('2d'), {
       type: 'bar',
       data: {
-        labels: ['Up (Active)', 'Warning', 'Critical', 'Down', 'Unmanaged'],
+        labels: statusLabels,
         datasets: [{
           label: 'Server Nodes',
           data: [
@@ -760,7 +763,46 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedStatus = statusKeys[index];
+            const swSearch = document.getElementById('swSearchInput');
+            if (swSearch) {
+              // Map status key to search term & filter
+              let term = 'Up';
+              if (selectedStatus === 'warning') term = 'Warning';
+              else if (selectedStatus === 'critical') term = 'Critical';
+              else if (selectedStatus === 'down') term = 'Down';
+              else if (selectedStatus === 'unmanaged_unknown') term = 'Unmanaged';
+
+              swSearch.value = term;
+              swCurrentPage = 1;
+
+              swFilteredNodes = allSwNodes.filter(n => {
+                const s = Number(n.Status);
+                const sDesc = (n.StatusDescription || '').toLowerCase();
+                if (selectedStatus === 'up') return s === 1 || sDesc.includes('up');
+                if (selectedStatus === 'warning') return s === 3 || sDesc.includes('warn');
+                if (selectedStatus === 'critical') return s === 14 || sDesc.includes('crit');
+                if (selectedStatus === 'down') return s === 2 || sDesc.includes('down');
+                if (selectedStatus === 'unmanaged_unknown') return s === 0 || s === 9 || sDesc.includes('unmanaged') || sDesc.includes('unknown');
+                return true;
+              });
+
+              renderSolarWindsTable();
+              swSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click bar to filter table'
+            }
+          }
+        },
         scales: {
           x: { ticks: { color: '#A3A3A3', font: { family: 'Inter' } }, grid: { color: '#222222' } },
           y: { ticks: { color: '#A3A3A3', font: { family: 'Inter' } }, grid: { color: '#222222' } }
@@ -795,8 +837,29 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedVendor = labels[index];
+            const swSearch = document.getElementById('swSearchInput');
+            if (swSearch && selectedVendor) {
+              swSearch.value = selectedVendor;
+              swCurrentPage = 1;
+              swFilteredNodes = allSwNodes.filter(n => 
+                (n.NormalizedVendor || n.Vendor || '').toLowerCase().includes(selectedVendor.toLowerCase())
+              );
+              renderSolarWindsTable();
+              swSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
         plugins: {
-          legend: { position: 'right', labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } } }
+          legend: { position: 'right', labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } } },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click vendor to filter table'
+            }
+          }
         }
       }
     });
