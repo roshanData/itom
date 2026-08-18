@@ -256,6 +256,10 @@
         const res = await fetch(path);
         if (res.ok) {
           solarwindsData = await res.json();
+          if (!allSwNodes || allSwNodes.length === 0) {
+            allSwNodes = solarwindsData.top_degraded_servers || [];
+            swFilteredNodes = [...allSwNodes];
+          }
           renderSolarWindsDashboard(solarwindsData);
           break;
         }

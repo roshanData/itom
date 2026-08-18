@@ -1241,20 +1241,27 @@ body {
 }
 
 .page-size-select {
-  background-color: #141414;
+  background-color: #1A1A1A;
   border: 1px solid var(--card-border);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   border-radius: var(--border-radius-sm);
-  padding: 6px 10px;
+  padding: 6px 12px;
   font-size: 12px;
+  font-family: var(--font-sans);
   cursor: pointer;
   outline: none;
   transition: all 0.15s ease;
 }
 
-.page-size-select:focus {
+.page-size-select:focus, .page-size-select:hover {
   border-color: var(--accent);
-  color: var(--text-primary);
+  color: #FFFFFF;
+}
+
+.page-size-select option {
+  background-color: #141414;
+  color: #FFFFFF;
+  padding: 6px 10px;
 }
 
 /* Helpers */
