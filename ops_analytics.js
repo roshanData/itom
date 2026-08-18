@@ -188,25 +188,32 @@
   // DATA LOADERS: INTUNE & SOLARWINDS
   // =========================================================================
 
+  let intuneCurrentPage = 1;
+  let intunePageSize = 50;
+  let intuneFilteredDevices = [];
+
+  let swCurrentPage = 1;
+  let swPageSize = 50;
+  let swFilteredNodes = [];
+
   async function loadAllTelemetry() {
     await Promise.all([
       loadIntuneTelemetry(),
       loadSolarWindsTelemetry()
     ]);
-    // Refresh header stat once data is populated
     updateHeaderStat(currentActiveTab);
   }
 
   async function loadIntuneTelemetry() {
-    // 1. First load summary for instant KPI/charts rendering (<50KB)
+    // 1. Immediately fetch summary (<50KB) and populate initial state
     const summaryPaths = ['data/intune_summary.json', '../../data/intune_summary.json', '/data/intune_summary.json'];
     for (const path of summaryPaths) {
       try {
         const res = await fetch(path);
         if (res.ok) {
           intuneData = await res.json();
-          if (!allIntuneDevices || allIntuneDevices.length === 0) {
-            allIntuneDevices = intuneData.sample_devices || [];
+          if (allIntuneDevices.length === 0 && intuneData.sample_devices) {
+            allIntuneDevices = [...intuneData.sample_devices];
             intuneFilteredDevices = [...allIntuneDevices];
           }
           renderIntuneDashboard(intuneData);
@@ -215,7 +222,7 @@
       } catch (err) {}
     }
 
-    // 2. Asynchronously load the complete 25,987 devices dataset for full-fleet search & pagination
+    // 2. Load the full 25,987 devices dataset asynchronously
     const fullPaths = ['data/intune_devices_all.json', '../../data/intune_devices_all.json', '/data/intune_devices_all.json'];
     for (const path of fullPaths) {
       try {
@@ -239,6 +246,7 @@
             } else {
               intuneFilteredDevices = [...allIntuneDevices];
             }
+            intuneCurrentPage = 1;
             renderIntuneTable();
             break;
           }
@@ -249,14 +257,12 @@
 
   async function loadSolarWindsTelemetry() {
     const summaryPaths = ['data/solarwinds_summary.json', '../../data/solarwinds_summary.json', '/data/solarwinds_summary.json'];
-    const nodesPaths = ['data/solarwinds_nodes.json', '../../data/solarwinds_nodes.json', '/data/solarwinds_nodes.json'];
-
     for (const path of summaryPaths) {
       try {
         const res = await fetch(path);
         if (res.ok) {
           solarwindsData = await res.json();
-          if (!allSwNodes || allSwNodes.length === 0) {
+          if (allSwNodes.length === 0) {
             allSwNodes = solarwindsData.sample_nodes || solarwindsData.top_degraded_servers || [];
             swFilteredNodes = [...allSwNodes];
           }
@@ -266,6 +272,7 @@
       } catch (err) {}
     }
 
+    const nodesPaths = ['data/solarwinds_nodes.json', '../../data/solarwinds_nodes.json', '/data/solarwinds_nodes.json'];
     for (const path of nodesPaths) {
       try {
         const res = await fetch(path);
@@ -287,6 +294,7 @@
           } else {
             swFilteredNodes = [...allSwNodes];
           }
+          swCurrentPage = 1;
           renderSolarWindsTable();
           break;
         }

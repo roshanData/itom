@@ -12,7 +12,7 @@
   <!-- Chart.js for enterprise visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Vanilla CSS Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=5.0">
+  <link rel="stylesheet" href="style.css?v=6.0">
 </head>
 <body class="dashboard-body">
 
@@ -187,15 +187,12 @@
               </thead>
               <tbody id="deviceTableBody">
                 <!-- Dynamically Populated by ops_analytics.js -->
-                <tr>
-                  <td colspan="8" class="text-center py-4">Loading real Microsoft Intune records...</td>
-                </tr>
               </tbody>
             </table>
           </div>
 
           <div class="table-footer">
-            <span id="tableRecordCount">Showing 1–25 of 25,987 devices</span>
+            <span id="tableRecordCount"></span>
             <div class="pagination-controls" id="intunePagination">
               <!-- Dynamically Populated with clean Prev, 1, 2, 3, Next buttons -->
             </div>
@@ -321,15 +318,12 @@
               </thead>
               <tbody id="swTableBody">
                 <!-- Dynamically Populated by ops_analytics.js -->
-                <tr>
-                  <td colspan="8" class="text-center py-4">Loading real SolarWinds Orion server records...</td>
-                </tr>
               </tbody>
             </table>
           </div>
 
           <div class="table-footer">
-            <span id="swTableRecordCount">Showing 1–25 of 1,548 nodes</span>
+            <span id="swTableRecordCount"></span>
             <div class="pagination-controls" id="swPagination">
               <!-- Dynamically Populated with clean Prev, 1, 2, 3, Next buttons -->
             </div>
@@ -343,7 +337,7 @@
   </main>
 
   <!-- Script Inclusions -->
-  <script src="ops_analytics.js?v=10.0"></script>
+  <script src="ops_analytics.js?v=11.0"></script>
 </body>
 </html>
 
