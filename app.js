@@ -168,20 +168,26 @@ document.addEventListener('DOMContentLoaded', () => {
     return 'ops_analytics.html#intune';
   }
   
-  function launchModule(moduleName, targetUrl) {
+  function launchModule(moduleName, targetUrl, isComingSoon) {
     closeAllDropdowns();
     if (launcherModuleName) launcherModuleName.textContent = moduleName;
-    if (launcherOverlay) launcherOverlay.classList.add('active');
     
-    if (launcherStatus) launcherStatus.textContent = 'Launching module console...';
-    
-    const destination = resolveModuleDestination(moduleName, targetUrl);
+    if (isComingSoon) {
+      if (launcherStatus) {
+        launcherStatus.innerHTML = `<span class="text-warning font-semibold">Phase 2 Module — In Development Pipeline</span><br><span class="text-xs text-muted">Integration with enterprise backend scheduled for upcoming release.</span>`;
+      }
+      if (launcherOverlay) launcherOverlay.classList.add('active');
+      return;
+    }
 
-    // Quick 250ms visual feedback before direct navigation
+    if (launcherStatus) launcherStatus.textContent = 'Launching Module 1: OPS Analytics...';
+    if (launcherOverlay) launcherOverlay.classList.add('active');
+
+    // Quick 200ms visual feedback before direct navigation
     launcherTimeout = setTimeout(() => {
       closeLauncher();
-      window.location.href = destination;
-    }, 250);
+      window.location.href = 'ops_analytics.html#intune';
+    }, 200);
   }
 
   function closeLauncher() {
@@ -197,8 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const nameElem = card.querySelector('.module-name');
       const moduleName = nameElem ? nameElem.textContent : 'Module';
+      const status = card.getAttribute('data-status');
+      const isComingSoon = status === 'coming-soon';
       const targetUrl = card.getAttribute('href');
-      launchModule(moduleName, targetUrl);
+      launchModule(moduleName, targetUrl, isComingSoon);
     });
   });
 
