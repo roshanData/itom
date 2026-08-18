@@ -205,8 +205,10 @@
         const res = await fetch(path);
         if (res.ok) {
           intuneData = await res.json();
-          allIntuneDevices = intuneData.sample_devices || [];
-          intuneFilteredDevices = [...allIntuneDevices];
+          if (!allIntuneDevices || allIntuneDevices.length === 0) {
+            allIntuneDevices = intuneData.sample_devices || [];
+            intuneFilteredDevices = [...allIntuneDevices];
+          }
           renderIntuneDashboard(intuneData);
           break;
         }
@@ -223,11 +225,21 @@
           if (Array.isArray(fullList) && fullList.length > 0) {
             allIntuneDevices = fullList;
             const searchInput = document.getElementById('deviceSearchInput');
-            const currentQuery = (searchInput ? searchInput.value : '').toLowerCase().trim();
-            if (!currentQuery) {
+            const q = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            if (q) {
+              intuneFilteredDevices = allIntuneDevices.filter(d => {
+                return (d.deviceName || '').toLowerCase().includes(q) ||
+                       (d.userPrincipalName || '').toLowerCase().includes(q) ||
+                       (d.serialNumber || '').toLowerCase().includes(q) ||
+                       (d.model || '').toLowerCase().includes(q) ||
+                       (d.operatingSystem || '').toLowerCase().includes(q) ||
+                       (d.complianceState || '').toLowerCase().includes(q) ||
+                       (d.manufacturer || '').toLowerCase().includes(q);
+              });
+            } else {
               intuneFilteredDevices = [...allIntuneDevices];
-              renderIntuneTable();
             }
+            renderIntuneTable();
             break;
           }
         }
@@ -239,14 +251,11 @@
     const summaryPaths = ['data/solarwinds_summary.json', '../../data/solarwinds_summary.json', '/data/solarwinds_summary.json'];
     const nodesPaths = ['data/solarwinds_nodes.json', '../../data/solarwinds_nodes.json', '/data/solarwinds_nodes.json'];
 
-    let summaryLoaded = false;
     for (const path of summaryPaths) {
       try {
         const res = await fetch(path);
         if (res.ok) {
           solarwindsData = await res.json();
-          summaryLoaded = true;
-          // Render initial dashboard with summary data
           renderSolarWindsDashboard(solarwindsData);
           break;
         }
@@ -259,15 +268,25 @@
         if (res.ok) {
           const rawNodesJson = await res.json();
           allSwNodes = Array.isArray(rawNodesJson) ? rawNodesJson : (rawNodesJson.nodes || []);
-          swFilteredNodes = [...allSwNodes];
+          const swSearch = document.getElementById('swSearchInput');
+          const q = (swSearch ? swSearch.value : '').toLowerCase().trim();
+          if (q) {
+            swFilteredNodes = allSwNodes.filter(n => {
+              return (n.Caption || '').toLowerCase().includes(q) ||
+                     (n.IPAddress || '').toLowerCase().includes(q) ||
+                     (n.Vendor || '').toLowerCase().includes(q) ||
+                     (n.MachineType || '').toLowerCase().includes(q) ||
+                     (n.HealthClassification || n.HealthTier || '').toLowerCase().includes(q) ||
+                     (n.City || '').toLowerCase().includes(q) ||
+                     (n.StatusDescription || '').toLowerCase().includes(q);
+            });
+          } else {
+            swFilteredNodes = [...allSwNodes];
+          }
           renderSolarWindsTable();
           break;
         }
       } catch (err) {}
-    }
-
-    if (!summaryLoaded && allSwNodes.length > 0) {
-      renderSolarWindsTable();
     }
   }
 
@@ -767,53 +786,50 @@
       return;
     }
 
-    let buttonsHtml = '';
+    let buttonsHtml = '<div class="pagination-wrapper">';
 
     // Previous Button
     buttonsHtml += `
-      <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}" title="Previous Page">
-        &larr;
+      <button class="pagination-btn pagination-nav" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}" title="Previous Page">
+        &larr; Prev
       </button>
     `;
 
-    // Dynamic Window calculation (e.g. 1 ... 4 5 6 ... 10)
-    const maxButtons = 5;
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    // Compact smart window: always show first, last, current, and neighbours
+    const pagesToShow = [];
+    pagesToShow.push(1);
 
-    if (endPage - startPage < maxButtons - 1) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pagesToShow.push(i);
     }
 
-    if (startPage > 1) {
-      buttonsHtml += `<button class="pagination-btn" data-page="1">1</button>`;
-      if (startPage > 2) {
-        buttonsHtml += `<span class="pagination-info">&hellip;</span>`;
+    if (totalPages > 1 && !pagesToShow.includes(totalPages)) {
+      pagesToShow.push(totalPages);
+    }
+
+    pagesToShow.sort((a, b) => a - b);
+
+    let lastP = 0;
+    for (const p of pagesToShow) {
+      if (lastP && p - lastP > 1) {
+        buttonsHtml += `<span class="pagination-ellipsis">&bull;&bull;&bull;</span>`;
       }
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
       buttonsHtml += `
         <button class="pagination-btn ${p === currentPage ? 'active' : ''}" data-page="${p}">
           ${p}
         </button>
       `;
-    }
-
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        buttonsHtml += `<span class="pagination-info">&hellip;</span>`;
-      }
-      buttonsHtml += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+      lastP = p;
     }
 
     // Next Button
     buttonsHtml += `
-      <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}" title="Next Page">
-        &rarr;
+      <button class="pagination-btn pagination-nav" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}" title="Next Page">
+        Next &rarr;
       </button>
     `;
 
+    buttonsHtml += '</div>';
     container.innerHTML = buttonsHtml;
 
     // Attach click listeners to pagination buttons
