@@ -1146,6 +1146,10 @@
     }
 
     async function triggerTelemetryRefresh() {
+      const svgIcon = refreshBtn ? refreshBtn.querySelector('svg') : null;
+      if (svgIcon) svgIcon.classList.add('spin');
+      if (refreshBtn) refreshBtn.disabled = true;
+
       remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
       updateCountdownDisplay();
       if (countdownElem) {
@@ -1155,9 +1159,12 @@
         await loadAllTelemetry();
       } catch (err) {
         console.error('Auto-refresh error:', err);
+      } finally {
+        if (svgIcon) svgIcon.classList.remove('spin');
+        if (refreshBtn) refreshBtn.disabled = false;
+        remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
+        updateCountdownDisplay();
       }
-      remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
-      updateCountdownDisplay();
     }
 
     if (timerInterval) clearInterval(timerInterval);

@@ -850,6 +850,15 @@ body {
   background-color: var(--card-bg-hover);
 }
 
+.spin {
+  animation: spinAnimation 0.75s linear infinite;
+}
+
+@keyframes spinAnimation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .btn-sm {
   padding: 6px 12px;
   font-size: 12px;
