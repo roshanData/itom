@@ -334,44 +334,39 @@
     updateHeaderStat(currentActiveTab);
 
     // 1. OS Distribution Doughnut Chart
-    renderOsChart(data.os_breakdown || {
-      'Windows': 25334,
-      'macOS': 602,
-      'Linux': 24,
-      'iOS': 2,
-      'Android': 1
-    });
+    renderOsChart(data.os_breakdown || {});
 
     // 2. Compliance Bar Chart (Interactive Click-to-Filter)
-    renderComplianceChart(data.compliance_breakdown || {
-      'compliant': 21589,
-      'noncompliant': 3422,
-      'configManager': 935,
-      'unknown': 31,
-      'inGracePeriod': 10
-    });
+    renderComplianceChart(data.compliance_breakdown || {});
 
     // 3. Manufacturer Pie Chart
-    renderMfgChart(data.manufacturer_breakdown || {
-      'Dell': 15716,
-      'HP': 8610,
-      'Lenovo': 959,
-      'Apple': 604,
-      'Other': 98
-    });
+    renderMfgChart(data.manufacturer_breakdown || {});
 
     // 4. Update Stale Asset Aging values if present
     const aging = data.aging_breakdown;
     if (aging) {
-      setElemText('agingActiveText', `${Number(aging.active_7d || 20412).toLocaleString()} (${aging.active_pct || 78.5}%)`);
-      setElemText('agingIdleText', `${Number(aging.idle_30d || 2378).toLocaleString()} (${aging.idle_pct || 9.2}%)`);
-      setElemText('agingStaleText', `${Number(aging.stale_30d_plus || 3197).toLocaleString()} (${aging.stale_pct || 12.3}%)`);
+      const actCount = aging.active_7d || 0;
+      const idlCount = aging.idle_30d || 0;
+      const stlCount = aging.stale_30d_plus || 0;
+      const actPct = aging.active_pct || (totalDevsNum > 0 ? ((actCount / totalDevsNum) * 100).toFixed(1) : 0);
+      const idlPct = aging.idle_pct || (totalDevsNum > 0 ? ((idlCount / totalDevsNum) * 100).toFixed(1) : 0);
+      const stlPct = aging.stale_pct || (totalDevsNum > 0 ? ((stlCount / totalDevsNum) * 100).toFixed(1) : 0);
+
+      setElemText('agingActiveText', `${Number(actCount).toLocaleString()} (${actPct}%)`);
+      setElemText('agingIdleText', `${Number(idlCount).toLocaleString()} (${idlPct}%)`);
+      setElemText('agingStaleText', `${Number(stlCount).toLocaleString()} (${stlPct}%)`);
+      
       const barActive = document.getElementById('agingActiveBar');
       const barIdle = document.getElementById('agingIdleBar');
       const barStale = document.getElementById('agingStaleBar');
-      if (barActive) barActive.style.width = `${aging.active_pct || 78.5}%`;
-      if (barIdle) barIdle.style.width = `${aging.idle_pct || 9.2}%`;
-      if (barStale) barStale.style.width = `${aging.stale_pct || 12.3}%`;
+      if (barActive) barActive.style.width = `${actPct}%`;
+      if (barIdle) barIdle.style.width = `${idlPct}%`;
+      if (barStale) barStale.style.width = `${stlPct}%`;
+
+      const riskFooter = document.getElementById('agingFooterRiskText');
+      if (riskFooter) {
+        riskFooter.textContent = `${Number(stlCount).toLocaleString()} non-syncing endpoints flagged for license reclamation & patch triage.`;
+      }
     }
 
     // 5. Update Windows 11 Lifecycle & Encryption metrics dynamically
@@ -656,13 +651,13 @@
     updateHeaderStat(currentActiveTab);
 
     // 1. Health Tier Doughnut Chart
-    renderSwHealthChart(data.health_breakdown || { 'High': 1357, 'Medium': 150, 'Low': 41 });
+    renderSwHealthChart(data.health_breakdown || {});
 
     // 2. Status Bar Chart
-    renderSwStatusChart(metrics.status_counts || { 'up': 1370, 'warning': 25, 'critical': 35, 'down': 6, 'unmanaged_unknown': 112 });
+    renderSwStatusChart(metrics.status_counts || {});
 
     // 3. Vendor Pie Chart (Zero counts automatically filtered)
-    renderSwVendorChart(data.vendor_breakdown || { 'Cisco': 492, 'Windows': 261, 'Linux': 4, 'Other': 791 });
+    renderSwVendorChart(data.vendor_breakdown || {});
 
     // 4. Top Saturated Server Triage List
     renderSwSaturatedList(data.top_saturated_servers || data.top_degraded_servers || []);
