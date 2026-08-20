@@ -426,10 +426,31 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedOS = labels[index];
+            const searchInput = document.getElementById('deviceSearchInput');
+            if (searchInput && selectedOS) {
+              searchInput.value = selectedOS;
+              intuneCurrentPage = 1;
+              intuneFilteredDevices = allIntuneDevices.filter(d => 
+                (d.operatingSystem || '').toLowerCase().includes(selectedOS.toLowerCase())
+              );
+              renderIntuneTable();
+              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
         plugins: {
           legend: {
             position: 'right',
             labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } }
+          },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click slice to filter table'
+            }
           }
         }
       }
@@ -526,10 +547,38 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        onClick: (event, elements) => {
+          if (elements && elements.length > 0) {
+            const index = elements[0].index;
+            const selectedVendor = labels[index];
+            const searchInput = document.getElementById('deviceSearchInput');
+            if (searchInput && selectedVendor) {
+              searchInput.value = selectedVendor;
+              intuneCurrentPage = 1;
+              intuneFilteredDevices = allIntuneDevices.filter(d => {
+                const m = (d.manufacturer || '').toLowerCase();
+                const v = selectedVendor.toLowerCase();
+                if (v === 'dell') return m.includes('dell');
+                if (v === 'hp') return m.includes('hp') || m.includes('hewlett');
+                if (v === 'lenovo') return m.includes('lenovo');
+                if (v === 'apple') return m.includes('apple');
+                if (v === 'other') return !m.includes('dell') && !m.includes('hp') && !m.includes('hewlett') && !m.includes('lenovo') && !m.includes('apple');
+                return m.includes(v);
+              });
+              renderIntuneTable();
+              searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        },
         plugins: {
           legend: {
             position: 'right',
             labels: { color: '#A3A3A3', font: { family: 'Inter', size: 11 } }
+          },
+          tooltip: {
+            callbacks: {
+              afterLabel: () => '💡 Click slice to filter table'
+            }
           }
         }
       }
