@@ -313,13 +313,16 @@
       if (elem) elem.textContent = text;
     };
 
-    const totalDevs = Number(metrics.total_managed_devices || 25987).toLocaleString();
-    const compliantCount = Number(metrics.compliant_devices || 21589).toLocaleString();
-    const nonCompliantCount = Number(metrics.noncompliant_devices || 3422).toLocaleString();
+    const totalDevs = Number(metrics.total_managed_devices || 26509).toLocaleString();
+    const compliantCount = Number(metrics.compliant_devices || 22078).toLocaleString();
+    const nonCompliantCount = Number(metrics.noncompliant_devices || 3442).toLocaleString();
+    const compBreakdown = data.compliance_breakdown || {};
+    const coManagedCount = Number(compBreakdown.configManager || 945).toLocaleString();
 
     setElemText('kpiTotalDevices', totalDevs);
     setElemText('kpiCompliantCount', compliantCount);
     setElemText('kpiNonCompliantCount', nonCompliantCount);
+    setElemText('kpiCoManagedCount', coManagedCount);
 
     const compTag = document.getElementById('kpiComplianceTag');
     if (compTag) {
