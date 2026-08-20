@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  itom-portal:
+    build: .
+    container_name: itom-portal
+    restart: always
+    ports:
+      - "8080:80"
