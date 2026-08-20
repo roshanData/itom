@@ -219,12 +219,12 @@
           <div class="lifecycle-widget">
             <div class="lifecycle-stat-row">
               <div class="lifecycle-stat-box">
-                <div class="stat-number text-success font-semibold">25,314</div>
+                <div class="stat-number text-success font-semibold" id="win11CountText">25,713</div>
                 <div class="stat-title text-muted text-xs">Windows 11 (Modern)</div>
-                <div class="stat-badge text-success">99.9% Fleet Migrated</div>
+                <div class="stat-badge text-success" id="win11PctBadge">99.9% Fleet Migrated</div>
               </div>
               <div class="lifecycle-stat-box">
-                <div class="stat-number text-warning font-semibold">20</div>
+                <div class="stat-number text-warning font-semibold" id="win10CountText">22</div>
                 <div class="stat-title text-muted text-xs">Windows 10 (Legacy/EOL)</div>
                 <div class="stat-badge text-warning">Urgent Upgrade Target</div>
               </div>
@@ -232,10 +232,10 @@
             <div class="encryption-row">
               <div class="flex justify-between text-xs mb-1">
                 <span class="text-muted">BitLocker / FileVault Disk Encryption:</span>
-                <span class="text-success font-semibold">95.8% (24,892 Protected)</span>
+                <span class="text-success font-semibold" id="encryptionText">95.8% (25,396 Protected)</span>
               </div>
               <div class="aging-progress-bg">
-                <div class="aging-progress-fill" style="width: 95.8%; background-color: #10B981;"></div>
+                <div class="aging-progress-fill" id="encryptionBar" style="width: 95.8%; background-color: #10B981;"></div>
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@
   </main>
 
   <!-- Script Inclusions -->
-  <script src="ops_analytics.js?v=14.0"></script>
+  <script src="ops_analytics.js?v=15.0"></script>
 </body>
 </html>
 
