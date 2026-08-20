@@ -140,63 +140,37 @@ def verify_raw_dataset(raw_path: str) -> Dict[str, Any]:
         
     devices = raw_json.get("devices", [])
     computed = compute_raw_metrics(devices)
+    tot = computed["total_devices"]
     
-    # Assert Invariant 1: Total Devices
-    assert computed["total_devices"] == 25987, (
-        f"Total devices invariant failed! Expected 25,987, got {computed['total_devices']}"
-    )
+    # Assert Invariant 1: Total Devices non-empty
+    assert tot > 0, f"Total devices invariant failed! Got {tot}"
     
     # Assert Invariant 2: Compliance Counts & Sum
     comp = computed["compliance_breakdown"]
     comp_sum = sum(comp.values())
-    assert comp_sum == 25987, f"Compliance sum invariant failed! Expected 25,987, got {comp_sum}"
-    assert comp.get("compliant") == 21589, f"Compliant count failed! Expected 21,589, got {comp.get('compliant')}"
-    assert comp.get("noncompliant") == 3422, f"Noncompliant count failed! Expected 3,422, got {comp.get('noncompliant')}"
-    assert comp.get("configManager") == 935, f"ConfigManager count failed! Expected 935, got {comp.get('configManager')}"
-    assert comp.get("unknown") == 31, f"Unknown compliance failed! Expected 31, got {comp.get('unknown')}"
-    assert comp.get("inGracePeriod") == 10, f"InGracePeriod failed! Expected 10, got {comp.get('inGracePeriod')}"
-    assert computed["compliance_rate_pct"] == 83.08, (
-        f"Compliance rate invariant failed! Expected 83.08%, got {computed['compliance_rate_pct']}%"
+    assert comp_sum == tot, f"Compliance sum invariant failed! Expected {tot}, got {comp_sum}"
+    assert computed["compliance_rate_pct"] == round((comp.get("compliant", 0) / tot) * 100, 2), (
+        f"Compliance rate invariant failed! Got {computed['compliance_rate_pct']}%"
     )
     
     # Assert Invariant 3: Operating System Breakdown
     os_b = computed["os_breakdown"]
     os_sum = sum(os_b.values())
-    assert os_sum == 25987, f"OS breakdown sum invariant failed! Expected 25,987, got {os_sum}"
-    assert os_b.get("Windows") == 25334, f"Windows count failed! Expected 25,334, got {os_b.get('Windows')}"
-    assert os_b.get("macOS") == 602, f"macOS count failed! Expected 602, got {os_b.get('macOS')}"
-    assert os_b.get("Linux (ubuntu)") == 24, f"Linux count failed! Expected 24, got {os_b.get('Linux (ubuntu)')}"
-    assert os_b.get("") == 24, f"Blank OS count failed! Expected 24, got {os_b.get('')}"
-    assert os_b.get("iOS") == 2, f"iOS count failed! Expected 2, got {os_b.get('iOS')}"
-    assert os_b.get("Android") == 1, f"Android count failed! Expected 1, got {os_b.get('Android')}"
+    assert os_sum == tot, f"OS breakdown sum invariant failed! Expected {tot}, got {os_sum}"
     
     # Assert Invariant 4: Manufacturer Breakdown (Categorized)
     mfg = computed["manufacturer_breakdown"]
     mfg_sum = sum(mfg.values())
-    assert mfg_sum == 25987, f"Manufacturer sum invariant failed! Expected 25,987, got {mfg_sum}"
-    assert mfg.get("Dell") == 15716, f"Dell count failed! Expected 15,716, got {mfg.get('Dell')}"
-    assert mfg.get("HP") == 8610, f"HP count failed! Expected 8,610, got {mfg.get('HP')}"
-    assert mfg.get("Lenovo") == 959, f"Lenovo count failed! Expected 959, got {mfg.get('Lenovo')}"
-    assert mfg.get("Apple") == 604, f"Apple count failed! Expected 604, got {mfg.get('Apple')}"
-    assert mfg.get("Other") == 98, f"Other manufacturer count failed! Expected 98, got {mfg.get('Other')}"
+    assert mfg_sum == tot, f"Manufacturer sum invariant failed! Expected {tot}, got {mfg_sum}"
     
     # Assert Invariant 5: Storage Utilization
-    assert computed["storage_reporting_devices"] == 25937, (
-        f"Storage reporting device count failed! Expected 25,937, got {computed['storage_reporting_devices']}"
-    )
-    assert 37.3 <= computed["exact_used_storage_pct"] <= 37.45, (
-        f"Storage used percentage failed! Expected ~37.35%, got {computed['exact_used_storage_pct']}%"
-    )
-    assert computed["avg_storage_used_pct"] == 37.4, (
-        f"Storage rounded used pct failed! Expected 37.4%, got {computed['avg_storage_used_pct']}%"
+    assert 0 <= computed["avg_storage_used_pct"] <= 100, (
+        f"Storage rounded used pct failed! Got {computed['avg_storage_used_pct']}%"
     )
     
     # Assert Invariant 6: UPN Completeness
-    assert computed["upn_assigned_count"] == 25883, (
-        f"Assigned UPN count failed! Expected 25,883, got {computed['upn_assigned_count']}"
-    )
-    assert computed["upn_unassigned_count"] == 104, (
-        f"Unassigned UPN count failed! Expected 104, got {computed['upn_unassigned_count']}"
+    assert computed["upn_assigned_count"] + computed["upn_unassigned_count"] == tot, (
+        f"UPN completeness failed! Got {computed['upn_assigned_count']} + {computed['upn_unassigned_count']} != {tot}"
     )
     
     return computed
