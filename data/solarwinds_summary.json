@@ -2757,5 +2757,8 @@
       "HealthClassification": "Low"
     }
   ],
-  "critical_saturated_count": 41
+  "critical_saturated_count": 41,
+  "metadata": {
+    "last_sync_utc": "2026-08-20T05:43:34.542370+00:00"
+  }
 }
