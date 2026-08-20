@@ -1126,12 +1126,67 @@
       .replace(/'/g, '&#039;');
   }
 
+  // =========================================================================
+  // AUTOMATED 30-MINUTE RECURRING TELEMETRY REFRESH ENGINE
+  // =========================================================================
+
+  const AUTO_REFRESH_INTERVAL_SECONDS = 30 * 60; // 30 Minutes
+  let remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
+  let timerInterval = null;
+
+  function initAutoRefreshTimer() {
+    const countdownElem = document.getElementById('refreshCountdown');
+    const refreshBtn = document.getElementById('manualRefreshBtn');
+
+    function updateCountdownDisplay() {
+      if (!countdownElem) return;
+      const mins = Math.floor(remainingSeconds / 60);
+      const secs = remainingSeconds % 60;
+      countdownElem.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    async function triggerTelemetryRefresh() {
+      remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
+      updateCountdownDisplay();
+      if (countdownElem) {
+        countdownElem.textContent = 'Syncing...';
+      }
+      try {
+        await loadAllTelemetry();
+      } catch (err) {
+        console.error('Auto-refresh error:', err);
+      }
+      remainingSeconds = AUTO_REFRESH_INTERVAL_SECONDS;
+      updateCountdownDisplay();
+    }
+
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      remainingSeconds--;
+      if (remainingSeconds <= 0) {
+        triggerTelemetryRefresh();
+      } else {
+        updateCountdownDisplay();
+      }
+    }, 1000);
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        triggerTelemetryRefresh();
+      });
+    }
+
+    updateCountdownDisplay();
+  }
+
   // Export globals
   window.switchTab = switchTab;
   window.getActiveTab = getActiveTab;
   window.initTabRouter = initTabRouter;
   window.exportIntuneCSV = exportIntuneCSV;
   window.exportSolarWindsCSV = exportSolarWindsCSV;
+  window.initAutoRefreshTimer = initAutoRefreshTimer;
 
   // Initialize
   document.addEventListener('DOMContentLoaded', () => {
@@ -1139,6 +1194,8 @@
     initSearchFilters();
     initCsvExports();
     loadAllTelemetry();
+    initAutoRefreshTimer();
   });
 
 })();
+

@@ -1530,23 +1530,5 @@
       "freeStorageGB": 384.3,
       "usedStoragePct": 19.3
     }
-  ],
-  "aging_breakdown": {
-    "active_7d": 20412,
-    "idle_30d": 2378,
-    "stale_30d_plus": 3197,
-    "active_pct": 78.5,
-    "idle_pct": 9.2,
-    "stale_pct": 12.3
-  },
-  "os_lifecycle_breakdown": {
-    "Windows 11 (Modern)": 25314,
-    "Windows 10 (Legacy/EOL)": 20,
-    "macOS / Linux / Mobile": 653
-  },
-  "encryption_metrics": {
-    "encrypted_devices": 24892,
-    "unencrypted_devices": 1095,
-    "encryption_rate_pct": 95.78
-  }
+  ]
 }

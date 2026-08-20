@@ -48,8 +48,16 @@
           </svg>
           Export CSV
         </button>
-        <div class="live-badge">
-          <span class="pulse-dot"></span> Live Sync
+        <button class="btn btn-secondary" id="manualRefreshBtn" title="Instant live refresh">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          Refresh
+        </button>
+        <div class="live-badge" id="autoRefreshBadge" title="Automated 30-min telemetry synchronization active">
+          <span class="pulse-dot"></span> Auto-Sync: <span id="refreshCountdown" class="font-mono text-xs text-white">30:00</span>
         </div>
       </div>
     </div>
@@ -425,7 +433,7 @@
   </main>
 
   <!-- Script Inclusions -->
-  <script src="ops_analytics.js?v=13.0"></script>
+  <script src="ops_analytics.js?v=14.0"></script>
 </body>
 </html>
 
