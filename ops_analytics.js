@@ -206,7 +206,6 @@
 
   async function loadIntuneTelemetry() {
     const ts = Date.now();
-    // 1. Immediately fetch summary (<50KB) and populate initial state
     const summaryPaths = [`data/intune_summary.json?t=${ts}`, `/data/intune_summary.json?t=${ts}`];
     for (const path of summaryPaths) {
       try {
@@ -219,38 +218,6 @@
           }
           renderIntuneDashboard(intuneData);
           break;
-        }
-      } catch (err) {}
-    }
-
-    // 2. Load the full devices dataset asynchronously if available
-    const fullPaths = [`data/intune_devices_all.json?t=${ts}`, `/data/intune_devices_all.json?t=${ts}`];
-    for (const path of fullPaths) {
-      try {
-        const res = await fetch(path);
-        if (res.ok) {
-          const fullList = await res.json();
-          if (Array.isArray(fullList) && fullList.length > 0) {
-            allIntuneDevices = fullList;
-            const searchInput = document.getElementById('deviceSearchInput');
-            const q = (searchInput ? searchInput.value : '').toLowerCase().trim();
-            if (q) {
-              intuneFilteredDevices = allIntuneDevices.filter(d => {
-                return (d.deviceName || '').toLowerCase().includes(q) ||
-                       (d.userPrincipalName || '').toLowerCase().includes(q) ||
-                       (d.serialNumber || '').toLowerCase().includes(q) ||
-                       (d.model || '').toLowerCase().includes(q) ||
-                       (d.operatingSystem || '').toLowerCase().includes(q) ||
-                       (d.complianceState || '').toLowerCase().includes(q) ||
-                       (d.manufacturer || '').toLowerCase().includes(q);
-              });
-            } else {
-              intuneFilteredDevices = [...allIntuneDevices];
-            }
-            intuneCurrentPage = 1;
-            renderIntuneTable();
-            break;
-          }
         }
       } catch (err) {}
     }
@@ -269,35 +236,6 @@
             swFilteredNodes = [...allSwNodes];
           }
           renderSolarWindsDashboard(solarwindsData);
-          break;
-        }
-      } catch (err) {}
-    }
-
-    const nodesPaths = [`data/solarwinds_nodes.json?t=${ts}`, `/data/solarwinds_nodes.json?t=${ts}`];
-    for (const path of nodesPaths) {
-      try {
-        const res = await fetch(path);
-        if (res.ok) {
-          const rawNodesJson = await res.json();
-          allSwNodes = Array.isArray(rawNodesJson) ? rawNodesJson : (rawNodesJson.nodes || []);
-          const swSearch = document.getElementById('swSearchInput');
-          const q = (swSearch ? swSearch.value : '').toLowerCase().trim();
-          if (q) {
-            swFilteredNodes = allSwNodes.filter(n => {
-              return (n.Caption || '').toLowerCase().includes(q) ||
-                     (n.IPAddress || '').toLowerCase().includes(q) ||
-                     (n.Vendor || '').toLowerCase().includes(q) ||
-                     (n.MachineType || '').toLowerCase().includes(q) ||
-                     (n.HealthClassification || n.HealthTier || '').toLowerCase().includes(q) ||
-                     (n.City || '').toLowerCase().includes(q) ||
-                     (n.StatusDescription || '').toLowerCase().includes(q);
-            });
-          } else {
-            swFilteredNodes = [...allSwNodes];
-          }
-          swCurrentPage = 1;
-          renderSolarWindsTable();
           break;
         }
       } catch (err) {}
