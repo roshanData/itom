@@ -205,8 +205,9 @@
   }
 
   async function loadIntuneTelemetry() {
+    const ts = Date.now();
     // 1. Immediately fetch summary (<50KB) and populate initial state
-    const summaryPaths = ['data/intune_summary.json', '../../data/intune_summary.json', '/data/intune_summary.json'];
+    const summaryPaths = [`data/intune_summary.json?t=${ts}`, `/data/intune_summary.json?t=${ts}`];
     for (const path of summaryPaths) {
       try {
         const res = await fetch(path);
@@ -222,8 +223,8 @@
       } catch (err) {}
     }
 
-    // 2. Load the full 25,987 devices dataset asynchronously
-    const fullPaths = ['data/intune_devices_all.json', '../../data/intune_devices_all.json', '/data/intune_devices_all.json'];
+    // 2. Load the full devices dataset asynchronously if available
+    const fullPaths = [`data/intune_devices_all.json?t=${ts}`, `/data/intune_devices_all.json?t=${ts}`];
     for (const path of fullPaths) {
       try {
         const res = await fetch(path);
@@ -256,7 +257,8 @@
   }
 
   async function loadSolarWindsTelemetry() {
-    const summaryPaths = ['data/solarwinds_summary.json', '../../data/solarwinds_summary.json', '/data/solarwinds_summary.json'];
+    const ts = Date.now();
+    const summaryPaths = [`data/solarwinds_summary.json?t=${ts}`, `/data/solarwinds_summary.json?t=${ts}`];
     for (const path of summaryPaths) {
       try {
         const res = await fetch(path);
@@ -272,7 +274,7 @@
       } catch (err) {}
     }
 
-    const nodesPaths = ['data/solarwinds_nodes.json', '../../data/solarwinds_nodes.json', '/data/solarwinds_nodes.json'];
+    const nodesPaths = [`data/solarwinds_nodes.json?t=${ts}`, `/data/solarwinds_nodes.json?t=${ts}`];
     for (const path of nodesPaths) {
       try {
         const res = await fetch(path);
