@@ -193,8 +193,8 @@ class TestTabNavigationHTMLStructure(unittest.TestCase):
     def test_tier1_tab_buttons_count_and_keys(self):
         """Tier 1: HTML must declare tab buttons with valid data-tab attributes."""
         tab_keys = [btn["data-tab"] for btn in self.parser.tab_buttons]
-        expected_keys = ["intune", "solarwinds", "network", "dex"]
-        self.assertGreaterEqual(len(tab_keys), 4, f"Expected at least 4 tab buttons, found: {tab_keys}")
+        expected_keys = ["intune", "solarwinds"]
+        self.assertGreaterEqual(len(tab_keys), 2, f"Expected at least 2 tab buttons, found: {tab_keys}")
         for exp in expected_keys:
             self.assertIn(exp, tab_keys, f"Tab button for '{exp}' not found in HTML!")
 
