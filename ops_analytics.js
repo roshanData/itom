@@ -756,13 +756,16 @@
     destroyChartSafe(swHealthChartInstance, canvas);
 
     const tiers = ['High', 'Medium', 'Low'];
+    const highVal = Number(healthData.High || 0);
+    const medVal = Number(healthData.Medium || 0);
+    const lowVal = Number(healthData.Low || 0);
 
     swHealthChartInstance = new Chart(canvas.getContext('2d'), {
       type: 'doughnut',
       data: {
         labels: ['High Health (Healthy)', 'Medium Health (Warning)', 'Low Health (Critical)'],
         datasets: [{
-          data: [healthData.High || 1357, healthData.Medium || 150, healthData.Low || 41],
+          data: [highVal, medVal, lowVal],
           backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
           borderColor: '#141414',
           borderWidth: 2
@@ -808,19 +811,19 @@
     const statusKeys = ['up', 'warning', 'critical', 'down', 'unmanaged_unknown'];
     const statusLabels = ['Up (Active)', 'Warning', 'Critical', 'Down', 'Unmanaged'];
 
+    const upVal = Number(statusData.up || 0);
+    const warnVal = Number(statusData.warning || 0);
+    const critVal = Number(statusData.critical || 0);
+    const downVal = Number(statusData.down || 0);
+    const unmanVal = Number(statusData.unmanaged_unknown || 0);
+
     swStatusChartInstance = new Chart(canvas.getContext('2d'), {
       type: 'bar',
       data: {
         labels: statusLabels,
         datasets: [{
           label: 'Server Nodes',
-          data: [
-            statusData.up || 1370,
-            statusData.warning || 25,
-            statusData.critical || 35,
-            statusData.down || 6,
-            statusData.unmanaged_unknown || 112
-          ],
+          data: [upVal, warnVal, critVal, downVal, unmanVal],
           backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#DC2626', '#6B7280'],
           borderRadius: 6
         }]
