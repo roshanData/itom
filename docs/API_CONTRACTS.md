@@ -50,7 +50,7 @@ This document defines the formal data contracts, API schemas, payload specificat
         "operatingSystem": "Windows",
         "osVersion": "10.0.26200.8457",
         "complianceState": "noncompliant",
-        "userPrincipalName": "Janhvi.Tendulkar@Coforge.com",
+        "userPrincipalName": "Janhvi.Tendulkar@example.com",
         "model": "Dell Pro 14 PC14250",
         "manufacturer": "Dell Inc.",
         "serialNumber": "J02XDJ4",
@@ -209,7 +209,7 @@ The export function generates an RFC 4180 compliant CSV file downloaded with fil
 | 2 | `Operating System` | `Windows` | OS Family |
 | 3 | `OS Version` | `10.0.26200.8457` | OS Kernel / Build Number |
 | 4 | `Compliance State` | `noncompliant` | Policy Compliance Status |
-| 5 | `User Principal Name` | `Janhvi.Tendulkar@Coforge.com` | Primary user Azure UPN |
+| 5 | `User Principal Name` | `Janhvi.Tendulkar@example.com` | Primary user Azure UPN |
 | 6 | `Model` | `Dell Pro 14 PC14250` | Hardware Model |
 | 7 | `Manufacturer` | `Dell Inc.` | OEM Manufacturer |
 | 8 | `Serial Number` | `J02XDJ4` | Hardware Serial / Service Tag |

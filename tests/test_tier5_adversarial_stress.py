@@ -443,7 +443,7 @@ class TestTableFilteringScaleAndMalformedInputs(unittest.TestCase):
             {
                 "id": f"dev-{i}",
                 "deviceName": f"LAP-CORP-{i:05d}",
-                "userPrincipalName": f"employee_{i}@coforge.com",
+                "userPrincipalName": f"employee_{i}@example.com",
                 "serialNumber": f"SN{i:07d}",
                 "model": "ThinkPad T14 Gen 4" if i % 3 == 0 else "Latitude 5420",
                 "operatingSystem": "Windows" if i % 10 != 0 else "macOS",
@@ -501,7 +501,7 @@ class TestCsvExportRfc4180AdversarialCompliance(unittest.TestCase):
                 "deviceName": 'LAP-001 "Special Edition"',
                 "operatingSystem": "Windows 11, Enterprise",
                 "osVersion": "10.0.26200",
-                "userPrincipalName": 'vip,"chief",officer@coforge.com',
+                "userPrincipalName": 'vip,"chief",officer@example.com',
                 "manufacturer": 'Dell, Inc. "OEM"',
                 "model": 'Latitude, 5420 "Rugged"',
                 "serialNumber": 'SN,"123",456',
@@ -514,7 +514,7 @@ class TestCsvExportRfc4180AdversarialCompliance(unittest.TestCase):
                 "deviceName": "LAP-002\r\nLine2\r\nLine3",
                 "operatingSystem": "macOS",
                 "osVersion": "14.5",
-                "userPrincipalName": "john@coforge.com",
+                "userPrincipalName": "john@example.com",
                 "manufacturer": "Apple",
                 "model": "MacBook Pro",
                 "serialNumber": "C02XYZ",
@@ -535,7 +535,7 @@ class TestCsvExportRfc4180AdversarialCompliance(unittest.TestCase):
         row1 = reader[1]
         self.assertEqual(row1[0], 'LAP-001 "Special Edition"')
         self.assertEqual(row1[2], 'Windows 11, Enterprise')
-        self.assertEqual(row1[4], 'vip,"chief",officer@coforge.com')
+        self.assertEqual(row1[4], 'vip,"chief",officer@example.com')
         self.assertEqual(row1[5], 'Dell, Inc. "OEM"')
         self.assertEqual(row1[6], 'Latitude, 5420 "Rugged"')
         self.assertEqual(row1[7], 'SN,"123",456')
@@ -582,7 +582,7 @@ class TestCsvExportRfc4180AdversarialCompliance(unittest.TestCase):
                 "deviceName": "ラップトップ-東京-01",
                 "operatingSystem": "Windows 11 (日本語)",
                 "osVersion": "10.0.26200",
-                "userPrincipalName": "tanaka.taro@coforge.com",
+                "userPrincipalName": "tanaka.taro@example.com",
                 "manufacturer": "Lenovo (レノボ)",
                 "model": "ThinkPad X1 Carbon 💻",
                 "serialNumber": "SN-JP-001",
@@ -595,7 +595,7 @@ class TestCsvExportRfc4180AdversarialCompliance(unittest.TestCase):
                 "deviceName": "جهاز-دبي-02",
                 "operatingSystem": "macOS (العربية)",
                 "osVersion": "14.5",
-                "userPrincipalName": "ahmed.ali@coforge.com",
+                "userPrincipalName": "ahmed.ali@example.com",
                 "manufacturer": "Apple",
                 "model": "MacBook Air 🚀",
                 "serialNumber": "SN-AE-002",

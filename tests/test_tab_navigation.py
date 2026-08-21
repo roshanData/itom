@@ -263,9 +263,9 @@ class TestSearchFilterEngine(unittest.TestCase):
                 cls.devices = json.load(f).get("sample_devices", [])
         else:
             cls.devices = [
-                {"deviceName": "LAP-NJ-81003082", "userPrincipalName": "Janhvi.Tendulkar@Coforge.com", "serialNumber": "J02XDJ4", "model": "Dell Pro 14", "operatingSystem": "Windows"},
-                {"deviceName": "LAP-LON-10029", "userPrincipalName": "john.smith@coforge.com", "serialNumber": "PF3XYZ01", "model": "ThinkPad T14", "operatingSystem": "Windows"},
-                {"deviceName": "MAC-NYC-00451", "userPrincipalName": "sarah.connor@coforge.com", "serialNumber": "C02XYZ88", "model": "MacBook Pro", "operatingSystem": "macOS"}
+                {"deviceName": "LAP-NJ-81003082", "userPrincipalName": "Janhvi.Tendulkar@example.com", "serialNumber": "J02XDJ4", "model": "Dell Pro 14", "operatingSystem": "Windows"},
+                {"deviceName": "LAP-LON-10029", "userPrincipalName": "john.smith@example.com", "serialNumber": "PF3XYZ01", "model": "ThinkPad T14", "operatingSystem": "Windows"},
+                {"deviceName": "MAC-NYC-00451", "userPrincipalName": "sarah.connor@example.com", "serialNumber": "C02XYZ88", "model": "MacBook Pro", "operatingSystem": "macOS"}
             ]
 
     def test_tier1_empty_search_returns_all_devices(self):
@@ -305,7 +305,7 @@ class TestCSVExportCompliance(unittest.TestCase):
         sample_data = [
             {
                 "id": "uuid-1", "deviceName": "LAP-001", "operatingSystem": "Windows",
-                "osVersion": "10.0.26200", "userPrincipalName": "user1@coforge.com",
+                "osVersion": "10.0.26200", "userPrincipalName": "user1@example.com",
                 "manufacturer": "Dell Inc.", "model": "Latitude 5420",
                 "serialNumber": "SN001", "complianceState": "compliant",
                 "totalStorageGB": 512.0, "freeStorageGB": 256.0,
@@ -313,7 +313,7 @@ class TestCSVExportCompliance(unittest.TestCase):
             },
             {
                 "id": "uuid-2", "deviceName": 'LAP-002 "Special"', "operatingSystem": "macOS",
-                "osVersion": "26.6.1", "userPrincipalName": "user2@coforge.com",
+                "osVersion": "26.6.1", "userPrincipalName": "user2@example.com",
                 "manufacturer": "Apple", "model": "MacBook Pro, 14-inch",
                 "serialNumber": "SN002", "complianceState": "noncompliant",
                 "totalStorageGB": 1024.0, "freeStorageGB": 800.0,
@@ -341,7 +341,7 @@ class TestCSVExportCompliance(unittest.TestCase):
             "deviceName": 'LAP-003, "High-Priority"',
             "operatingSystem": "Windows",
             "osVersion": "10.0",
-            "userPrincipalName": "vip,exec@coforge.com",
+            "userPrincipalName": "vip,exec@example.com",
             "manufacturer": "HP",
             "model": "EliteBook, 840 G8",
             "serialNumber": 'SN"123"',
@@ -357,7 +357,7 @@ class TestCSVExportCompliance(unittest.TestCase):
         row = reader[1]
         
         self.assertEqual(row[0], 'LAP-003, "High-Priority"')
-        self.assertEqual(row[4], 'vip,exec@coforge.com')
+        self.assertEqual(row[4], 'vip,exec@example.com')
         self.assertEqual(row[6], 'EliteBook, 840 G8')
         self.assertEqual(row[7], 'SN"123"')
 

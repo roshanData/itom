@@ -250,7 +250,7 @@ class TestSampleRecordGeneration(unittest.TestCase):
             "operatingSystem": "Windows",
             "osVersion": "10.0.26200.9168",
             "complianceState": "compliant",
-            "userPrincipalName": "alex.chen@coforge.com",
+            "userPrincipalName": "alex.chen@example.com",
             "model": "ThinkPad T14 Gen 4",
             "manufacturer": "LENOVO",
             "serialNumber": "PF3XYZ01",
