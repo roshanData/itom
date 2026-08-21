@@ -675,15 +675,16 @@
       if (elem) elem.textContent = text;
     };
 
-    const totalNodes = Number(metrics.total_server_nodes || 1548).toLocaleString();
-    const highHealth = Number(metrics.high_health_nodes || 1357).toLocaleString();
-    const medHealth = Number(metrics.medium_health_nodes || 150).toLocaleString();
-    const lowHealth = Number(metrics.low_health_nodes || 41).toLocaleString();
+    const totalNodes = Number(metrics.total_server_nodes || 1547).toLocaleString();
+    const highHealth = Number(metrics.high_health_nodes || 1361).toLocaleString();
+    const medHealth = Number(metrics.medium_health_nodes || 136).toLocaleString();
+    const lowHealth = Number(metrics.low_critical_nodes || metrics.low_health_nodes || 50).toLocaleString();
 
     setElemText('swTotalNodes', totalNodes);
     setElemText('swHighHealthCount', highHealth);
     setElemText('swMedHealthCount', medHealth);
     setElemText('swLowHealthCount', lowHealth);
+    setElemText('swCriticalBadge', `${lowHealth} Critical Nodes`);
 
     const healthTag = document.getElementById('swHealthTag');
     if (healthTag) {
